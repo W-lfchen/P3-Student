@@ -70,9 +70,10 @@ public class KruskalMSTCalculator<N> implements MSTCalculator<N> {
      * @return {@code true} if the edge was accepted and the two MST's were merged,
      * {@code false} if it was skipped.
      */
-    protected boolean acceptEdge(Edge<N> edge) {
-        throw new UnsupportedOperationException("Not implemented yet"); // TODO H2 d): remove if implemented
-
+    protected boolean acceptEdge(Edge<N> edge) { // TODO: is there no easier way to do this?
+        if (mstGroups.stream().filter(x -> x.contains(edge.a())).anyMatch(x -> x.contains(edge.b()))) return false;
+        joinGroups(mstGroups.indexOf(mstGroups.stream().filter(x -> x.contains(edge.a())).findAny().orElseThrow()), mstGroups.indexOf(mstGroups.stream().filter(x -> x.contains(edge.b())).findAny().orElseThrow()));
+        return true;
     }
 
     /**
