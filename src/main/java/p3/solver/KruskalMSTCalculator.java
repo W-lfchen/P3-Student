@@ -57,7 +57,9 @@ public class KruskalMSTCalculator<N> implements MSTCalculator<N> {
      * <p> Initially, {@link #mstEdges} is empty and {@link #mstGroups} contains a set for each node in the graph.
      */
     protected void init() {
-        throw new UnsupportedOperationException("Not implemented yet"); // TODO H2 b): remove if implemented
+        mstEdges.clear();
+        mstGroups.clear();
+        graph.getNodes().forEach(x -> mstGroups.add(new HashSet<>(Set.of(x))));
     }
 
     /**
