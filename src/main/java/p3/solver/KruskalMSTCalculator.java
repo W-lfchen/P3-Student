@@ -3,10 +3,9 @@ package p3.solver;
 import p3.graph.Edge;
 import p3.graph.Graph;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Implementation of Kruskal's algorithm, a minimum spanning tree algorithm.
@@ -85,7 +84,9 @@ public class KruskalMSTCalculator<N> implements MSTCalculator<N> {
      * @param bIndex The index of the second set to join.
      */
     protected void joinGroups(int aIndex, int bIndex) {
-        throw new UnsupportedOperationException("Not implemented yet"); // TODO H2 c): remove if implemented
-
+        int targetIndex = mstGroups.get(aIndex).size() > mstGroups.get(bIndex).size() ? aIndex : bIndex;
+        int smallerIndex = targetIndex == aIndex ? bIndex : aIndex;
+        mstGroups.get(smallerIndex).forEach(x -> mstGroups.get(targetIndex).add(x));
+        mstGroups.remove(smallerIndex);
     }
 }
