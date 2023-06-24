@@ -5,6 +5,8 @@ import p3.SetUtils;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * An implementation of an immutable {@link Graph} that uses an {@link AdjacencyMatrix} to store the graph.
@@ -51,7 +53,16 @@ public class AdjacencyGraph<N> implements Graph<N> {
         this.nodes = SetUtils.immutableCopyOf(nodes);
         this.edges = SetUtils.immutableCopyOf(edges);
 
-        throw new UnsupportedOperationException("Not implemented yet"); // TODO H1 c): remove if implemented
+        // indexNodes = IntStream.range(0, nodes.size()).boxed().collect(Collectors.toMap(Function.identity(), i -> nodes.stream().toList().get(i)));
+        IntStream.range(0, nodes.size()).boxed().forEach(i -> indexNodes.put(i, nodes.stream().toList().get(i)));
+        // nodeIndices = IntStream.range(0, nodes.size()).boxed().collect(Collectors.toMap(indexNodes::get, Function.identity()));
+        IntStream.range(0, nodes.size()).boxed().forEach(i -> nodeIndices.put(indexNodes.get(i),i));
+
+        // this doesn't work. This is most likely an error.
+        // edges.forEach(edge -> matrix.addEdge(nodeIndices.get(edge.a()), nodeIndices.get(edge.b()), edge.weight()));
+        for (Edge<N> edge : edges){
+            matrix.addEdge(nodeIndices.get(edge.a()), nodeIndices.get(edge.b()), edge.weight());
+        }
     }
 
     @Override
@@ -66,7 +77,7 @@ public class AdjacencyGraph<N> implements Graph<N> {
 
     @Override
     public Set<Edge<N>> getAdjacentEdges(N node) {
-        throw new UnsupportedOperationException("Not implemented yet"); // TODO H1 c): remove if implemented
+        return IntStream.range(0, nodes.size()).filter(x -> matrix.getAdjacent(nodeIndices.get(node))[x] != 0).mapToObj(x -> new EdgeImpl<>(node, indexNodes.get(x), matrix.getWeight(x, nodeIndices.get(node)))).collect(Collectors.toSet());
     }
 
     @Override
