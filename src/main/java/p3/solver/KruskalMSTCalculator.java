@@ -47,8 +47,12 @@ public class KruskalMSTCalculator<N> implements MSTCalculator<N> {
         this.mstGroups = new ArrayList<>();
     }
     @Override
-    public Graph<N> calculateMST() {
-        throw new UnsupportedOperationException("Not implemented yet"); // TODO H2 e): remove if implemented
+    public Graph<N> calculateMST() { // TODO: test everything
+        init();
+        graph.getEdges().stream().sorted(Edge::compareTo).forEach(x -> {
+            if (acceptEdge(x)) mstEdges.add(x);
+        });
+        return Graph.of(graph.getNodes(), mstEdges);
     }
 
     /**
