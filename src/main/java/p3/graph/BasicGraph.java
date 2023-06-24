@@ -2,7 +2,10 @@ package p3.graph;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * A basic implementation of an immutable {@link Graph} that uses a {@link Map} to store the edges that are adjacent to each node.
@@ -39,7 +42,9 @@ public class BasicGraph<N> implements Graph<N> {
      * @param edges the edges.
      */
     public BasicGraph(Set<N> nodes, Set<Edge<N>> edges) {
-        throw new UnsupportedOperationException("Not implemented yet"); // TODO H1 a): remove if implemented
+        this.nodes = nodes;
+        this.edges = edges;
+        this.backing = nodes.stream().collect(Collectors.toMap(Function.identity(), x -> edges.stream().filter(y -> y.a().equals(x) || y.b().equals(x)).collect(Collectors.toSet())));
     }
 
     @Override
