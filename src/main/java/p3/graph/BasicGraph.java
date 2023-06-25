@@ -1,5 +1,7 @@
 package p3.graph;
 
+import p3.SetUtils;
+
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -42,8 +44,9 @@ public class BasicGraph<N> implements Graph<N> {
      * @param edges the edges.
      */
     public BasicGraph(Set<N> nodes, Set<Edge<N>> edges) {
-        this.nodes = nodes;
-        this.edges = edges;
+        this.nodes = SetUtils.immutableCopyOf(nodes);
+        this.edges = SetUtils.immutableCopyOf(edges);
+
         this.backing = nodes.stream().collect(Collectors.toMap(Function.identity(), x -> edges.stream().filter(y -> y.a().equals(x) || y.b().equals(x)).collect(Collectors.toSet())));
     }
 
