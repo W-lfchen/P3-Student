@@ -58,11 +58,11 @@ public class AdjacencyGraph<N> implements Graph<N> {
         // nodeIndices = IntStream.range(0, nodes.size()).boxed().collect(Collectors.toMap(indexNodes::get, Function.identity()));
         IntStream.range(0, nodes.size()).boxed().forEach(i -> nodeIndices.put(indexNodes.get(i),i));
 
-        // this doesn't work. This is most likely an error.
-        // edges.forEach(edge -> matrix.addEdge(nodeIndices.get(edge.a()), nodeIndices.get(edge.b()), edge.weight()));
-        for (Edge<N> edge : edges){
-            matrix.addEdge(nodeIndices.get(edge.a()), nodeIndices.get(edge.b()), edge.weight());
-        }
+        // the error has been fixed
+        edges.forEach(edge -> matrix.addEdge(nodeIndices.get(edge.a()), nodeIndices.get(edge.b()), edge.weight()));
+        // for (Edge<N> edge : edges){
+        //     matrix.addEdge(nodeIndices.get(edge.a()), nodeIndices.get(edge.b()), edge.weight());
+        // }
     }
 
     @Override
