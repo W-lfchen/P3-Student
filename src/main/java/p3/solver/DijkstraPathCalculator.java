@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Implementation of Dijkstra's algorithm, a single-source shortest path algorithm.
@@ -75,7 +77,12 @@ public class DijkstraPathCalculator<N> implements PathCalculator<N> {
      * @param start the start node
      */
     protected void init(N start) {
-        throw new UnsupportedOperationException("Not implemented yet"); // TODO H3 a): remove if implemented
+        distances.clear();
+        predecessors.clear();
+        remainingNodes.clear();
+        graph.getNodes().forEach(x -> distances.put(x, x.equals(start) ? 0 : Integer.MAX_VALUE));
+        graph.getNodes().forEach(x -> predecessors.put(x, null));
+        remainingNodes.addAll(graph.getNodes());
     }
 
     /**
