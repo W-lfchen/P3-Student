@@ -63,7 +63,13 @@ public class DijkstraPathCalculator<N> implements PathCalculator<N> {
      */
     @Override
     public List<N> calculatePath(final N start, final N end) {
-        throw new UnsupportedOperationException("Not implemented yet"); // TODO H3 e): remove if implemented
+        init(start);
+        while(!remainingNodes.isEmpty()) {
+            N node = extractMin();
+            if (!remainingNodes.remove(node)) throw new IllegalStateException("extractMin returned a node not contained in remainingNodes");
+            graph.getAdjacentEdges(node).forEach(x -> relax(x.a(), x.b(), x));
+        }
+        return reconstructPath(start, end);
     }
 
     /**
