@@ -104,7 +104,10 @@ public class DijkstraPathCalculator<N> implements PathCalculator<N> {
      * @param edge the edge between {@code from} and {@code to}.
      */
     protected void relax(N from, N to, Edge<N> edge) {
-        throw new UnsupportedOperationException("Not implemented yet"); // TODO H3 c): remove if implemented
+        if (edge.weight() < distances.get(to)) {
+            distances.put(to, edge.weight());
+            predecessors.put(to, from);
+        }
     }
 
     /**
