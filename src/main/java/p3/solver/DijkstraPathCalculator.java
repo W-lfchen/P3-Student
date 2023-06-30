@@ -3,13 +3,10 @@ package p3.solver;
 import p3.graph.Edge;
 import p3.graph.Graph;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Implementation of Dijkstra's algorithm, a single-source shortest path algorithm.
@@ -119,6 +116,6 @@ public class DijkstraPathCalculator<N> implements PathCalculator<N> {
      * @return a list of nodes in the order they need to be traversed to get the shortest path from the start node to the end node.
      */
     protected List<N> reconstructPath(N start, N end) {
-        throw new UnsupportedOperationException("Not implemented yet"); // TODO H3 d): remove if implemented
+        return Stream.iterate(end, x -> x.equals(start), predecessors::get).sorted(Collections.reverseOrder()).toList();
     }
 }
