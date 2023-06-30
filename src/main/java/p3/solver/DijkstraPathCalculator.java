@@ -92,7 +92,7 @@ public class DijkstraPathCalculator<N> implements PathCalculator<N> {
      * @return the next unprocessed node with minimal weight
      */
     protected N extractMin() {
-        throw new UnsupportedOperationException("Not implemented yet"); // TODO H3 b): remove if implemented
+        return remainingNodes.stream().reduce((x,y) -> distances.get(x) < distances.get(y) ? x : y).orElse(null);
     }
 
     /**
