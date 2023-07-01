@@ -17,7 +17,7 @@ public class MyApplication extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        AnimationScene scene = createKruskalScene();
+        AnimationScene scene = createDijkstraScene();
 
         primaryStage.setScene(scene);
         primaryStage.setTitle(scene.getTitle());

@@ -122,6 +122,15 @@ public class DijkstraPathCalculator<N> implements PathCalculator<N> {
      * @return a list of nodes in the order they need to be traversed to get the shortest path from the start node to the end node.
      */
     protected List<N> reconstructPath(N start, N end) {
-        return Stream.iterate(end, x -> x.equals(start), predecessors::get).sorted(Collections.reverseOrder()).toList();
+        // TODO: look for stream-based solution
+        // this solution is wrong in multiple ways
+        // List<N> list = Stream.iterate(end, x -> predecessors.get(x)).sorted(Collections.reverseOrder()).toList();
+        N x = end;
+        List<N> list = new ArrayList<>();
+        do {
+            list.add(x);
+        } while (null != (x = predecessors.get(x)));
+        Collections.reverse(list);
+        return list;
     }
 }
