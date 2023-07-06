@@ -34,6 +34,7 @@ public class AdjacencyMatrix {
      * @param weight the weight of the edge
      */
     public void addEdge(int a, int b, int weight) {
+        // both of these entries need to be set due to the graph being undirected
         matrix[a][b] = matrix[b][a] = weight;
     }
 
@@ -45,6 +46,7 @@ public class AdjacencyMatrix {
      * @return the weight of the edge between the given indices
      */
     public int getWeight(int a, int b) {
+        // the entries are 0 unless they have been set to a different value using addEdge
         return matrix[a][b];
     }
 
@@ -55,6 +57,7 @@ public class AdjacencyMatrix {
      * @return an array of the weights of the edges adjacent to the given index
      */
     public int[] getAdjacent(int index) {
+        // this should satisfy the requirement of creating a new array
         return Arrays.copyOf(matrix[index], matrix[index].length);
     }
 }
