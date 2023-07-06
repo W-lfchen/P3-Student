@@ -54,7 +54,7 @@ public class BasicGraph<N> implements Graph<N> {
         // the nodes are directly entered into the newly created map.
         // the edges are filtered so that one of the node is equal to the respective key in the map and the collected,
         // the collected set is the key's corresponding value
-        this.backing = Collections.unmodifiableMap(nodes.stream().collect(Collectors.toMap(Function.identity(), node -> Collections.unmodifiableSet(edges.stream().filter(y -> y.a().equals(nodes) || y.b().equals(nodes)).collect(Collectors.toSet())))));
+        this.backing = Collections.unmodifiableMap(nodes.stream().collect(Collectors.toMap(Function.identity(), node -> Collections.unmodifiableSet(edges.stream().filter(edge -> edge.a().equals(nodes) || edge.b().equals(nodes)).collect(Collectors.toSet())))));
     }
 
     @Override
