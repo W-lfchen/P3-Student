@@ -2,9 +2,12 @@ package p3.graph;
 
 import p3.SetUtils;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -53,16 +56,18 @@ public class AdjacencyGraph<N> implements Graph<N> {
         this.nodes = SetUtils.immutableCopyOf(nodes);
         this.edges = SetUtils.immutableCopyOf(edges);
 
-        // indexNodes = IntStream.range(0, nodes.size()).boxed().collect(Collectors.toMap(Function.identity(), i -> nodes.stream().toList().get(i)));
-        IntStream.range(0, nodes.size()).boxed().forEach(i -> indexNodes.put(i, nodes.stream().toList().get(i)));
-        // nodeIndices = IntStream.range(0, nodes.size()).boxed().collect(Collectors.toMap(indexNodes::get, Function.identity()));
-        IntStream.range(0, nodes.size()).boxed().forEach(i -> nodeIndices.put(indexNodes.get(i),i));
+        // the two maps are already initialised which doesn't make a lot of sense but this also won't be changed
+        // therefore, the maps just need to be filled with the correct entries
 
-        // the error has been fixed
+        // the sole purpose of using this class here instead of int is to increment the value in a lambda expression.
+        // variables in lambdas need to be final/effectively final, but the state of a referenced object may change.
+        AtomicInteger index = new AtomicInteger(0);
+        // insert a random node and an index in nodeIndices. The index is guaranteed to be unique due to the increment and starts at 0
+        nodes.forEach(node -> nodeIndices.put(node, index.getAndIncrement()));
+        // since this is supposed to be the exact inverse, construct indexNodes using nodeIndices, by getting a nodes' index
+        nodes.forEach(node -> indexNodes.put(nodeIndices.get(node), node));
+        // add each edge to the adjacency matrix, get the indices of the nodes using the newly created map
         edges.forEach(edge -> matrix.addEdge(nodeIndices.get(edge.a()), nodeIndices.get(edge.b()), edge.weight()));
-        // for (Edge<N> edge : edges){
-        //     matrix.addEdge(nodeIndices.get(edge.a()), nodeIndices.get(edge.b()), edge.weight());
-        // }
     }
 
     @Override
