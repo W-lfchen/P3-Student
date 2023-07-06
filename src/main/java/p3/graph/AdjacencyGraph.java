@@ -2,17 +2,16 @@ package p3.graph;
 
 import p3.SetUtils;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
  * An implementation of an immutable {@link Graph} that uses an {@link AdjacencyMatrix} to store the graph.
+ *
  * @param <N> the type of the nodes in this graph.
  */
 public class AdjacencyGraph<N> implements Graph<N> {
@@ -48,6 +47,7 @@ public class AdjacencyGraph<N> implements Graph<N> {
 
     /**
      * Constructs a new {@link AdjacencyGraph} with the given nodes and edges.
+     *
      * @param nodes the nodes in the graph.
      * @param edges the edges in the graph.
      */
@@ -82,7 +82,10 @@ public class AdjacencyGraph<N> implements Graph<N> {
 
     @Override
     public Set<Edge<N>> getAdjacentEdges(N node) {
-        return IntStream.range(0, nodes.size()).filter(x -> matrix.getAdjacent(nodeIndices.get(node))[x] != 0).mapToObj(x -> new EdgeImpl<>(node, indexNodes.get(x), matrix.getWeight(x, nodeIndices.get(node)))).collect(Collectors.toSet());
+        // get all indices of the nodes that are connected to node by filtering a stream of all indices
+        // then create a new edge from node to the node that maps to index with the corresponding weight for each index
+        // then collect the edges into an unmodifiable set
+        return IntStream.range(0, nodes.size()).filter(index -> matrix.getAdjacent(nodeIndices.get(node))[index] != 0).mapToObj(index -> new EdgeImpl<>(node, indexNodes.get(index), matrix.getWeight(index, nodeIndices.get(node)))).collect(Collectors.toUnmodifiableSet());
     }
 
     @Override

@@ -20,6 +20,7 @@ public class AdjacencyMatrix {
 
     /**
      * Constructs a new adjacency matrix with the given size.
+     *
      * @param size the size of the matrix.
      */
     public AdjacencyMatrix(int size) {
@@ -29,8 +30,8 @@ public class AdjacencyMatrix {
     /**
      * Adds an edge between the given indices with the given weight.
      *
-     * @param a the index of the first node
-     * @param b the index of the second node
+     * @param a      the index of the first node
+     * @param b      the index of the second node
      * @param weight the weight of the edge
      */
     public void addEdge(int a, int b, int weight) {
