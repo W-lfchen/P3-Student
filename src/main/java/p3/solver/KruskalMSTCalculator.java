@@ -91,9 +91,8 @@ public class KruskalMSTCalculator<N> implements MSTCalculator<N> {
      * @param bIndex The index of the second set to join.
      */
     protected void joinGroups(int aIndex, int bIndex) {
-        int targetIndex = mstGroups.get(aIndex).size() > mstGroups.get(bIndex).size() ? aIndex : bIndex;
-        int smallerIndex = targetIndex == aIndex ? bIndex : aIndex;
-        mstGroups.get(smallerIndex).forEach(x -> mstGroups.get(targetIndex).add(x));
-        mstGroups.remove(smallerIndex);
+        // the sets in mstGroups are modifiable, therefore simply add everything from the smaller set to the bigger one
+        // don't forget the call of List#remove which returns the removed element
+        mstGroups.get(mstGroups.get(aIndex).size() > mstGroups.get(bIndex).size() ? aIndex : bIndex).addAll(mstGroups.remove(mstGroups.get(aIndex).size() > mstGroups.get(bIndex).size() ? bIndex : aIndex));
     }
 }
