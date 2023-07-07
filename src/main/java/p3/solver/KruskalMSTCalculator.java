@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Implementation of Kruskal's algorithm, a minimum spanning tree algorithm.
@@ -51,11 +52,13 @@ public class KruskalMSTCalculator<N> implements MSTCalculator<N> {
     }
 
     @Override
-    public Graph<N> calculateMST() { // TODO: test everything
+    public Graph<N> calculateMST() {
+        // initialise state
         init();
-        graph.getEdges().stream().sorted(Edge::compareTo).forEach(x -> {
-            if (acceptEdge(x)) mstEdges.add(x);
-        });
+        // add all edges that are accepted, in ascending order
+        // they are collected into a list to ensure that the order is correct and to stop IntelliJ from being annoying
+        mstEdges.addAll(graph.getEdges().stream().sorted(Edge::compareTo).filter(this::acceptEdge).toList());
+        // return a graph consisting of the nodes and the edges that have been determined to create the mst
         return Graph.of(graph.getNodes(), mstEdges);
     }
 
