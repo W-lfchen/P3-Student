@@ -2,18 +2,21 @@ package p3.graph;
 
 /**
  * An undirected edge in a {@link Graph}.
+ *
  * @param <N> the type of the nodes in the graph.
  */
 public interface Edge<N> extends Comparable<Edge<N>> {
 
     /**
      * The first node that this edge connects.
+     *
      * @return The first node that this edge connects.
      */
     N a();
 
     /**
      * The second node that this edge connects.
+     *
      * @return The second node that this edge connects.
      */
     N b();
@@ -57,11 +60,12 @@ public interface Edge<N> extends Comparable<Edge<N>> {
 
     /**
      * Creates a new edge with the given nodes and weight.
-     * @param a the first node
-     * @param b the second node
+     *
+     * @param a      the first node
+     * @param b      the second node
      * @param weight the weight of the edge
+     * @param <N>    the type of the nodes in the graph
      * @return a new edge with the given nodes and weight
-     * @param <N> the type of the nodes in the graph
      */
     static <N> Edge<N> of(N a, N b, int weight) {
         return new EdgeImpl<>(a, b, weight);

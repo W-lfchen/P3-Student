@@ -4,9 +4,6 @@ import p3.graph.Edge;
 import p3.graph.Graph;
 
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Implementation of Dijkstra's algorithm, a single-source shortest path algorithm.
@@ -42,6 +39,7 @@ public class DijkstraPathCalculator<N> implements PathCalculator<N> {
 
     /**
      * Construct a new {@link DijkstraPathCalculator} for the given graph.
+     *
      * @param graph the graph to calculate paths in.
      */
     public DijkstraPathCalculator(Graph<N> graph) {
@@ -64,9 +62,10 @@ public class DijkstraPathCalculator<N> implements PathCalculator<N> {
     @Override
     public List<N> calculatePath(final N start, final N end) {
         init(start);
-        while(!remainingNodes.isEmpty()) {
+        while (!remainingNodes.isEmpty()) {
             N node = extractMin();
-            if (!remainingNodes.remove(node)) throw new IllegalStateException("extractMin returned a node not contained in remainingNodes");
+            if (!remainingNodes.remove(node))
+                throw new IllegalStateException("extractMin returned a node not contained in remainingNodes");
             graph.getAdjacentEdges(node).forEach(x -> relax(x.a(), x.b(), x));
         }
         return reconstructPath(start, end);
@@ -80,11 +79,16 @@ public class DijkstraPathCalculator<N> implements PathCalculator<N> {
      * @param start the start node
      */
     protected void init(N start) {
+        // the clear operation should be supported for everything, wipe the maps and set
         distances.clear();
         predecessors.clear();
         remainingNodes.clear();
-        graph.getNodes().forEach(x -> distances.put(x, x.equals(start) ? 0 : Integer.MAX_VALUE));
-        graph.getNodes().forEach(x -> predecessors.put(x, null));
+        // the starting distance is the maximum value so that it may be overridden
+        // except for the start node, which is 0 units away from itself
+        graph.getNodes().forEach(node -> distances.put(node, node.equals(start) ? 0 : Integer.MAX_VALUE));
+        // no predecessor has been determined at this point
+        graph.getNodes().forEach(node -> predecessors.put(node, null));
+        // all nodes remain
         remainingNodes.addAll(graph.getNodes());
     }
 
@@ -95,7 +99,9 @@ public class DijkstraPathCalculator<N> implements PathCalculator<N> {
      * @return the next unprocessed node with minimal weight
      */
     protected N extractMin() {
-        return remainingNodes.stream().reduce((x,y) -> distances.get(x) < distances.get(y) ? x : y).orElse(null);
+        // reduce them by finding the smallest element, according to the element's entry in distances
+        // the exception should never be thrown, but accessing the element using Optional#get without any checks is something one should not do
+        return remainingNodes.stream().reduce((x, y) -> distances.get(x) < distances.get(y) ? x : y).orElseThrow(() -> new IllegalStateException("RemainingNodes is empty!"));
     }
 
     /**
@@ -117,8 +123,8 @@ public class DijkstraPathCalculator<N> implements PathCalculator<N> {
      * Reconstructs the shortest path from {@code start} to {@code end} by using the {@link #predecessors} map.
      * <p> The returned path contains {@code start} as the first element and {@code end} as the last element.
      *
-     * @param start  the start node
-     * @param end the end node
+     * @param start the start node
+     * @param end   the end node
      * @return a list of nodes in the order they need to be traversed to get the shortest path from the start node to the end node.
      */
     protected List<N> reconstructPath(N start, N end) {
