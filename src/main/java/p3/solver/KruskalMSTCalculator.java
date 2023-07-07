@@ -3,12 +3,14 @@ package p3.solver;
 import p3.graph.Edge;
 import p3.graph.Graph;
 
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Implementation of Kruskal's algorithm, a minimum spanning tree algorithm.
+ *
  * @param <N> The type of the nodes in the graph.
  */
 public class KruskalMSTCalculator<N> implements MSTCalculator<N> {
@@ -39,6 +41,7 @@ public class KruskalMSTCalculator<N> implements MSTCalculator<N> {
 
     /**
      * Construct a new {@link KruskalMSTCalculator} for the given graph.
+     *
      * @param graph the graph to calculate the MST for.
      */
     public KruskalMSTCalculator(Graph<N> graph) {
@@ -46,6 +49,7 @@ public class KruskalMSTCalculator<N> implements MSTCalculator<N> {
         this.mstEdges = new HashSet<>();
         this.mstGroups = new ArrayList<>();
     }
+
     @Override
     public Graph<N> calculateMST() { // TODO: test everything
         init();
@@ -76,9 +80,18 @@ public class KruskalMSTCalculator<N> implements MSTCalculator<N> {
      * @return {@code true} if the edge was accepted and the two MST's were merged,
      * {@code false} if it was skipped.
      */
-    protected boolean acceptEdge(Edge<N> edge) { // TODO: is there no easier way to do this?
-        if (mstGroups.stream().filter(x -> x.contains(edge.a())).anyMatch(x -> x.contains(edge.b()))) return false;
-        joinGroups(mstGroups.indexOf(mstGroups.stream().filter(x -> x.contains(edge.a())).findAny().orElseThrow()), mstGroups.indexOf(mstGroups.stream().filter(x -> x.contains(edge.b())).findAny().orElseThrow()));
+    protected boolean acceptEdge(Edge<N> edge) {
+        // filter the sets so that only those that contain node a remain, this should be at most one set
+        // then simply check whether the set also contains node b and return false if it does
+        if (mstGroups.stream().filter(group -> group.contains(edge.a())).anyMatch(group -> group.contains(edge.b())))
+            return false;
+        // otherwise, join the sets and return true
+        // to join the sets, first attempt to find the indices of the set containing the nodes a and b, respectively
+        // the process is the same for both, the sets in mstGroups are filtered so that they need to contain the node
+        // this should always yield exactly one element, and the exception should never be thrown
+        joinGroups(mstGroups.indexOf(mstGroups.stream().filter(group -> group.contains(edge.a())).findFirst().orElseThrow(() -> new IllegalStateException("Can't find a group that contains node a"))), mstGroups.indexOf(mstGroups.stream().filter(group -> group.contains(edge.b())).findFirst().orElseThrow(() -> new IllegalStateException("Can't find a group that contains node b"))));
+        // it should be noted that during this entire exercise it is assumed that all the input and states are valid
+        // a lot more checks could be run here in order to see whether this is the case
         return true;
     }
 
