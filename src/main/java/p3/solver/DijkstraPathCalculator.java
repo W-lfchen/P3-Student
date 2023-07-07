@@ -140,6 +140,7 @@ public class DijkstraPathCalculator<N> implements PathCalculator<N> {
         // create a stream that begins with end and contains every predecessor until start, then append start
         // the result of this is inserted into a new ArrayList, with everything being added at the first index in order to reverse the order
         // that way, the list begins with start and ends with end, then return an unmodifiable view of it
+        // the combiner (3rd parameter of collect) should never be used, it is merely there as a requirement
         return Collections.unmodifiableList(Stream.concat(Stream.iterate(end, x -> !x.equals(start), predecessors::get), Stream.of(start)).collect(ArrayList::new, (list, node) -> list.add(0, node), ArrayList::addAll));
     }
 }
