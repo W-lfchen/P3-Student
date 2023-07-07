@@ -51,6 +51,7 @@ public interface Edge<N> extends Comparable<Edge<N>> {
      */
     @Override
     default int compareTo(Edge<N> other) {
+        // compare the edge weights according to the rules laid out by Integer#compare
         return Integer.compare(this.weight(), other.weight());
     }
 
