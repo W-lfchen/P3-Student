@@ -4,7 +4,6 @@ import p3.graph.Edge;
 import p3.graph.Graph;
 
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -138,7 +137,9 @@ public class DijkstraPathCalculator<N> implements PathCalculator<N> {
      * @return a list of nodes in the order they need to be traversed to get the shortest path from the start node to the end node.
      */
     protected List<N> reconstructPath(N start, N end) {
-        // trivial
-        return Collections.unmodifiableList(Stream.of(Stream.of(Stream.iterate(end, x -> !x.equals(start), predecessors::get).toList(), List.of(start)).flatMap(List::stream).collect(Collectors.toCollection(ArrayList::new))).peek(Collections::reverse).toList().get(0));
+        // create a stream that begins with end and contains every predecessor until start, then append start
+        // the result of this is inserted into a new ArrayList, with everything being added at the first index in order to reverse the order
+        // that way, the list begins with start and ends with end, then return an unmodifiable view of it
+        return Collections.unmodifiableList(Stream.concat(Stream.iterate(end, x -> !x.equals(start), predecessors::get), Stream.of(start)).collect(ArrayList::new, (list, node) -> list.add(0, node), ArrayList::addAll));
     }
 }
