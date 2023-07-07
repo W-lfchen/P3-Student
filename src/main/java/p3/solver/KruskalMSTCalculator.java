@@ -60,9 +60,11 @@ public class KruskalMSTCalculator<N> implements MSTCalculator<N> {
      * <p> Initially, {@link #mstEdges} is empty and {@link #mstGroups} contains a set for each node in the graph.
      */
     protected void init() {
+        // the operations should be supported by the respective collections
         mstEdges.clear();
         mstGroups.clear();
-        graph.getNodes().forEach(x -> mstGroups.add(new HashSet<>(Set.of(x))));
+        // create a new HashSet for each node that contains the node and nothing else
+        graph.getNodes().forEach(node -> mstGroups.add(new HashSet<>(Set.of(node))));
     }
 
     /**
