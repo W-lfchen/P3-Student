@@ -61,13 +61,18 @@ public class DijkstraPathCalculator<N> implements PathCalculator<N> {
      */
     @Override
     public List<N> calculatePath(final N start, final N end) {
+        // initialise state
         init(start);
+        // the algorithm is done if no nodes remain
         while (!remainingNodes.isEmpty()) {
+            // get the current working node and immediately remove it from remainingNodes
             N node = extractMin();
-            if (!remainingNodes.remove(node))
-                throw new IllegalStateException("extractMin returned a node not contained in remainingNodes");
-            graph.getAdjacentEdges(node).forEach(x -> relax(x.a(), x.b(), x));
+            remainingNodes.remove(node);
+            // relax with each adjacent edge
+            // it should be noted that the graph is undirected, but this should not cause issues
+            graph.getAdjacentEdges(node).forEach(edge -> relax(edge.a(), edge.b(), edge));
         }
+        // now that the graph and maps are in the required state, reconstruct the path
         return reconstructPath(start, end);
     }
 
