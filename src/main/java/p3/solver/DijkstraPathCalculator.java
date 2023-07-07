@@ -113,8 +113,11 @@ public class DijkstraPathCalculator<N> implements PathCalculator<N> {
      * @param edge the edge between {@code from} and {@code to}.
      */
     protected void relax(N from, N to, Edge<N> edge) {
-        if (edge.weight() < distances.get(to)) {
-            distances.put(to, edge.weight());
+        // do nothing if the distance doesn't need to be adjusted
+        if (distances.get(from) + edge.weight() < distances.get(to)) {
+            // otherwise, adjust the distance value
+            distances.put(to, distances.get(from) + edge.weight());
+            // don't forget to set the predecessor accordingly
             predecessors.put(to, from);
         }
     }
