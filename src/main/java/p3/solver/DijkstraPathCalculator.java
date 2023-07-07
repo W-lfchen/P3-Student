@@ -4,6 +4,8 @@ import p3.graph.Edge;
 import p3.graph.Graph;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Implementation of Dijkstra's algorithm, a single-source shortest path algorithm.
@@ -136,20 +138,7 @@ public class DijkstraPathCalculator<N> implements PathCalculator<N> {
      * @return a list of nodes in the order they need to be traversed to get the shortest path from the start node to the end node.
      */
     protected List<N> reconstructPath(N start, N end) {
-        // TODO: look for stream-based solution
-        // track the current node on the path as it is being reconstructed, start with the end
-        N currentNode = end;
-        // create a list to store the path
-        List<N> list = new ArrayList<>();
-        do {
-            // append the node to the list
-            list.add(currentNode);
-            // at the end of the algorithm, the start node is the only one in the path where the predecessor is null
-            // therefore, if the currentNode has been set to null based on the entry in predecessors, it previously was start
-        } while (null != (currentNode = predecessors.get(currentNode)));
-        // since the first node is end and the last is start, reverse the list
-        Collections.reverse(list);
-        // return an unmodifiable view of the list
-        return Collections.unmodifiableList(list);
+        // trivial
+        return Collections.unmodifiableList(Stream.of(Stream.of(Stream.iterate(end, x -> !x.equals(start), predecessors::get).toList(), List.of(start)).flatMap(List::stream).collect(Collectors.toCollection(ArrayList::new))).peek(Collections::reverse).toList().get(0));
     }
 }
