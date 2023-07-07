@@ -132,14 +132,19 @@ public class DijkstraPathCalculator<N> implements PathCalculator<N> {
      */
     protected List<N> reconstructPath(N start, N end) {
         // TODO: look for stream-based solution
-        // this solution is wrong in multiple ways
-        // List<N> list = Stream.iterate(end, x -> predecessors.get(x)).sorted(Collections.reverseOrder()).toList();
-        N x = end;
+        // track the current node on the path as it is being reconstructed, start with the end
+        N currentNode = end;
+        // create a list to store the path
         List<N> list = new ArrayList<>();
         do {
-            list.add(x);
-        } while (null != (x = predecessors.get(x)));
+            // append the node to the list
+            list.add(currentNode);
+            // at the end of the algorithm, the start node is the only one in the path where the predecessor is null
+            // therefore, if the currentNode has been set to null based on the entry in predecessors, it previously was start
+        } while (null != (currentNode = predecessors.get(currentNode)));
+        // since the first node is end and the last is start, reverse the list
         Collections.reverse(list);
-        return list;
+        // return an unmodifiable view of the list
+        return Collections.unmodifiableList(list);
     }
 }
