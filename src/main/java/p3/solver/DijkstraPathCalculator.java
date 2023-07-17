@@ -70,8 +70,8 @@ public class DijkstraPathCalculator<N> implements PathCalculator<N> {
             N node = extractMin();
             remainingNodes.remove(node);
             // relax with each adjacent edge
-            // it should be noted that the graph is undirected, but this should not cause issues
-            graph.getAdjacentEdges(node).forEach(edge -> relax(edge.a(), edge.b(), edge));
+            // I was wrong here, the direction of the edge matters, it should always be treated as if it started in the node
+            graph.getAdjacentEdges(node).forEach(edge -> relax(node, node.equals(edge.a()) ? edge.b() : edge.a(), edge));
         }
         // now that the graph and maps are in the required state, reconstruct the path
         return reconstructPath(start, end);
